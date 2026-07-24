@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PLC I/O Search</title>
+</head>
+<body>
+
+<h2>PLC I/O Search</h2>
+<input type="text" id="search" placeholder="Enter comment">
+<button onclick="searchData()">Search</button>
+<button onclick="showAll()">Show All</button>
+
+<table border="1" id="table">
+<tr><th>IO Number</th><th>Comment</th></tr>
+</table>
+
+<script>
+let data = [];
+
+fetch('data.csv')
+.then(res => res.text())
+.then(text => {
+  let rows = text.split("\n");
+  rows.forEach(r => {
+    let cols = r.split(",");
+    data.push({io: cols[0], comment: cols[1]});
+  });
+});
+
+function searchData() {
+  let val = document.getElementById("search").value.toLowerCase();
+  let table = document.getElementById("table");
+  table.innerHTML = "<tr><th>IO</th><th>Comment</th></tr>";
+
+  data.forEach(d => {
+    if (d.comment.toLowerCase().includes(val)) {
+      table.innerHTML += `<tr><td>${d.io}</td><td>${d.comment}</td></tr>`;
+    }
+  });
+}
+
+function showAll() {
+  let table = document.getElementById("table");
+  table.innerHTML = "<tr><th>IO</th><th>Comment</th></tr>";
+
+  data.forEach(d => {
+    table.innerHTML += `<tr><td>${d.io}</td><td>${d.comment}</td></tr>`;
+  });
+}
+</script>
+
+</body>
+</html>
